@@ -1,16 +1,36 @@
-Deployment via GitHub Actions
-=============================
+Deployment Guide (Koyeb & Vercel)
+================================
 
-What this does
-- Builds the project's Docker image using the repository `Dockerfile`.
-- Pushes the image to GitHub Container Registry (GHCR).
-- Optionally triggers a Render deploy if you set `RENDER_SERVICE_ID` and `RENDER_API_KEY` repository secrets.
+This project can be deployed to Koyeb (container-based with managed PostgreSQL database) or Vercel (serverless function-based).
 
-Enable and trigger
-1. In your GitHub repository, go to `Settings` → `Actions` and ensure actions are enabled.
-2. (Optional for Render) Add repository secrets: `RENDER_SERVICE_ID` and `RENDER_API_KEY`.
-3. Push to the `main` branch or run the workflow manually under the `Actions` tab.
+Deploying to Koyeb
+------------------
+Koyeb runs standard Docker containers and offers a free database tier.
 
-Notes
-- GitHub does not host long-running containers itself. This workflow pushes the image to GHCR so you can run it on any host (Render, Railway, your VPS, etc.).
-- If you want me to add support for another provider (Docker Hub, AWS ECS, Azure, etc.), tell me which one and I'll add it.
+### Option 1: 1-Click Deployment Button
+Click the button below to deploy the app:
+
+[![Deploy to Koyeb](https://www.koyeb.com/static/images/deploy/button.svg)](https://app.koyeb.com/deploy?type=git&repository=github.com/Bhargavitalatam/pm_api&branch=main&name=pm-api&ports=8000;http;/)
+
+### Option 2: Manual Setup on Koyeb
+1. Sign up/log in to [Koyeb](https://app.koyeb.com/).
+2. Create a new service and select **GitHub** as the deployment method.
+3. Choose your repository `pm_api`.
+4. Koyeb will automatically detect the `Dockerfile` and build it.
+5. Under **Environment variables**, set `DATABASE_URL` to your database connection string (you can provision a free PostgreSQL database directly on Koyeb).
+6. Set the exposed port to `8000`.
+
+Deploying to Vercel
+-------------------
+Vercel hosts the application as a Python serverless function.
+
+1. Install the Vercel CLI locally or connect your GitHub repository to Vercel in the dashboard.
+2. If using Vercel CLI, run:
+   ```bash
+   vercel
+   ```
+3. Set the environment variable `DATABASE_URL`. Since serverless functions restart often, configure a persistent remote PostgreSQL database (like [Neon](https://neon.tech/)) or use a temporary SQLite URL (`sqlite:///tmp/test.db`).
+4. Once configured, deploy to production with:
+   ```bash
+   vercel --prod
+   ```

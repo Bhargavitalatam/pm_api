@@ -70,3 +70,11 @@ A test user is automatically created on startup:
 | `SECRET_KEY` | JWT signing secret | `super-secret-key-for-jwt-signing-2026` |
 | `JWT_ALGORITHM` | JWT algorithm | `HS256` |
 | `JWT_EXPIRATION_MINUTES` | Token expiration in minutes | `60` |
+
+## Deployment
+
+For deployment options on other hosting providers, see [DEPLOY.md](file:///d:/pm_api/DEPLOY.md).
+
+### Deploy to Koyeb
+[![Deploy to Koyeb](https://www.koyeb.com/static/images/deploy/button.svg)](https://app.koyeb.com/deploy?type=git&repository=github.com/Bhargavitalatam/pm_api&branch=main&name=pm-api&ports=8000;http;/)
+
