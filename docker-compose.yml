@@ -1,0 +1,32 @@
+services:
+  db:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: pm_user
+      POSTGRES_PASSWORD: pm_password
+      POSTGRES_DB: pm_database
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U pm_user -d pm_database"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: postgresql://pm_user:pm_password@db:5432/pm_database
+      SECRET_KEY: super-secret-key-for-jwt-signing-2026
+      JWT_ALGORITHM: HS256
+      JWT_EXPIRATION_MINUTES: "60"
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  pgdata:
